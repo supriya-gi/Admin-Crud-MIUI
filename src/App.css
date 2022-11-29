@@ -32,7 +32,23 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.center {
+  text-align: center !important;
+  margin: 0 auto;
+}
+
+.account {
+  color: rgb(44, 25, 152);
+  text-decoration: none;
+  font-size: medium;
+}
+
+.hobbies {
+  display: flex !important;
 }
