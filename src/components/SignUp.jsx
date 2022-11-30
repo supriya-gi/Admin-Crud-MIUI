@@ -10,6 +10,10 @@ import Checkbox from "@mui/material/Checkbox";
 import Card from "@mui/material/Card";
 import LockRound from "@mui/material/Icon";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import MenuItem from "@mui/material/MenuItem";
+import InputLabel from "@mui/material/InputLabel";
+import Box from "@mui/material/Box";
+import Select from "@mui/material/Select";
 import { setDoc, doc } from "firebase/firestore";
 import { db } from "../firebase";
 import TextareaAutosize from "@mui/material/TextareaAutosize";
@@ -29,12 +33,12 @@ import firebase from "../firebase";
 import { auth } from "../firebase";
 import { async } from "@firebase/util";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-const checkboxes = [
-  { id: 1, text: "Reading" },
-  { id: 2, text: "Watching Movie" },
-  { id: 3, text: "Dancing" },
-  { id: 4, text: "Swimming" },
-];
+// const checkboxes = [
+//   { id: 1, text: "Reading" },
+//   { id: 2, text: "Watching Movie" },
+//   { id: 3, text: "Dancing" },
+//   { id: 4, text: "Swimming" },
+// ];
 function SignUp(props) {
   const [formData, setFormData] = useState({
     email: "",
@@ -43,23 +47,25 @@ function SignUp(props) {
     lname: "",
     gender: "",
     hobbies: "",
+    type: "",
   });
-  //   const [selectedCheckbox, setSelectedCheckbox] = useState([]);
-  //   const handleCheckChange = (id) => {
-  //     const findIdx = selectedCheckbox.indexOf(id);
+  // const [selectedCheckbox, setSelectedCheckbox] = useState([]);
+  // const handleCheckChange = (id) => {
+  //   const findIdx = selectedCheckbox.indexOf(id);
 
-  //     let selected;
-  //     if (findIdx > -1) {
-  //       selected = selectedCheckbox.filter((checkboxId) => checkboxId !== id);
-  //     } else {
-  //       selected = [...selectedCheckbox, id];
-  //     }
-  //     setSelectedCheckbox(selected);
-  //   };
+  //   let selected;
+  //   if (findIdx > -1) {
+  //     selected = selectedCheckbox.filter((checkboxId) => checkboxId !== id);
+  //   } else {
+  //     selected = [...selectedCheckbox, id];
+  //   }
+  //   setSelectedCheckbox(selected);
+  // };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+  // get user Data from authentication(res) and set to Firestore
   const createUserDocument = async (user, formData) => {
     if (!user) return;
 
@@ -69,6 +75,7 @@ function SignUp(props) {
     const { lname } = formData;
     const { gender } = formData;
     const { hobbies } = formData;
+    const { type } = formData;
 
     await setDoc(doc(db, `Employee`, `${user?.user.uid}`), {
       email,
@@ -77,6 +84,7 @@ function SignUp(props) {
       lname,
       gender,
       hobbies,
+      type,
       //   createdAt: new Date(),
     });
   };
@@ -84,6 +92,7 @@ function SignUp(props) {
   const handleSignUp = async (e) => {
     e.preventDefault();
     console.log("email", formData.email, "pass", formData.password);
+    //Funtion to Sign Up with Authentication
     await createUserWithEmailAndPassword(
       auth,
       formData.email,
@@ -207,6 +216,29 @@ function SignUp(props) {
                   </RadioGroup>
                 </FormControl>
                 <br /> <br />
+                {/* <FormControl className="hobbies">
+                  <Typography>Select Hobbies</Typography>
+                  <br />
+                  <FormGroup
+                    style={{ flexDirection: "row" }}
+                    onChange={(e) => {
+                      handleChange(e);
+                    }}
+                  >
+                    {checkboxes.map((checkbox) => (
+                      <FormLabel key={checkbox.id}>
+                        {checkbox.text}
+                        <FormControlLabel
+                          value={checkbox.id}
+                          // type="checkbox"
+                          control={<Checkbox />}
+                          onChange={() => handleCheckChange(checkbox.text)}
+                          selected={selectedCheckbox.includes(checkbox.text)}
+                        />
+                      </FormLabel>
+                    ))}
+                  </FormGroup>
+                </FormControl> */}
                 <TextareaAutosize
                   aria-label="minimum height"
                   minRows={3}
@@ -219,6 +251,24 @@ function SignUp(props) {
                   }}
                 />
                 <br />
+                <br />
+                <Box sx={{ Width: "100px" }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Type</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      name="type"
+                      label="Type"
+                      onChange={(e) => {
+                        handleChange(e);
+                      }}
+                    >
+                      <MenuItem value="manager">Manager</MenuItem>
+                      <MenuItem value="employee">Employee</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Box>
                 <br />
                 <Button type="submit" variant="contained">
                   Sign Up

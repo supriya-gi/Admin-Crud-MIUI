@@ -1,19 +1,16 @@
 import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import FormControl from "@mui/material/FormControl";
-import FormLabel from "@mui/material/FormLabel";
-import FormGroup from "@mui/material/FormGroup";
 import Checkbox from "@mui/material/Checkbox";
 import Card from "@mui/material/Card";
 import LockRound from "@mui/material/Icon";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
+import { query, collection, getDocs, where } from "firebase/firestore";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { ToastContainer, toast } from "react-toastify";
-
+import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   Avatar,
   Button,
@@ -21,21 +18,17 @@ import {
   CssBaseline,
   Divider,
   Grid,
-  Typography,
 } from "@mui/material";
 import "../App.css";
 import { Link } from "react-router-dom";
 import { Container } from "@mui/system";
+import { async } from "@firebase/util";
 
 function Login(props) {
-  // const [formData, setFormData] = useState({
-  //   fname: "",
-  //   lname: "",
-  //   gender: "",
-  //   hobbies: [],
-  // });
+  const Navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // const [type, setType] = useState(null);
   const [rememberMe, setRememberMe] = useState(false);
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -46,18 +39,53 @@ function Login(props) {
   const handleCheck = (e) => {
     setRememberMe(e.target.checked);
   };
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    signInWithEmailAndPassword(auth, email, password)
-      .then((res) => {
-        alert("User Login Successfully");
-        setEmail("");
-        setPassword("");
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+
+    try {
+      const res = await signInWithEmailAndPassword(auth, email, password);
+      const uid = res.user.uid;
+      console.log(uid);
+      const q = query(collection(db, "Employee"), where("email", "==", email));
+      const docs = await getDocs(q);
+      // console.log(docs.docs[0].data());
+      const type = docs.docs[0].data().type;
+      console.log(type);
+      if (type) {
+        // setType(type);
+        type === "manager" ? Navigate(`/manager`) : Navigate(`/employee`);
+      } else {
+        return "No user Found";
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
+
+  // signInWithEmailAndPassword(auth, email, password)
+  //   .then((res) => {
+  //     const uid = res.user.uid;
+  //     const q = query(collection(db, "Employee"), where("uid", "==", uid));
+  //     getDocs(q).then((res) => {
+  //       console.log("result", res.docs[0].data());
+  //     });
+  //     // console.log(docs);
+  //     // const type = docs.docs[0].data().type;
+
+  //     if (type) {
+  //       setType(type);
+  //       type === "manager" ? Navigate(`/${type}`) : Navigate(`/${type}`);
+  //     } else {
+  //       return "No user Found";
+  //     }
+  //     alert("User Login Successfully");
+  //     setEmail("");
+  //     setPassword("");
+  //   })
+  //   .catch((error) => {
+  //     alert(error.message);
+  //   });
+
   return (
     <div>
       {/* <h2>Login Login</h2> */}
@@ -69,10 +97,6 @@ function Login(props) {
               <Avatar style={{ margin: "0 auto" }}>
                 <AccountCircleIcon />
               </Avatar>
-
-              {/* <Typography>
-                <strong>Employee Login</strong>
-              </Typography> */}
               <h3>Login</h3>
 
               <form onSubmit={(e) => handleLogin(e)}>

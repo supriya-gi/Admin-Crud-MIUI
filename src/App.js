@@ -1,9 +1,10 @@
 import Login from "./components/Login";
 import "./App.css";
-// import { Route, Routes } from "react-router-dom";
-import Manager from "./components/Manager";
 import SignUp from "./components/SignUp";
 import { useState } from "react";
+import ManagerLogin from "./manager/ManagerLogin";
+import ManagerSignUp from "./manager/ManagerSignUp";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
   const [toggleForm, setToggleForm] = useState(true);
@@ -12,16 +13,20 @@ function App() {
   };
   return (
     <div className="App">
-      {/* <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/sign-up" element={<SignUp />} />
-        <Route path="manager" element={<Manager />} />
-      </Routes> */}
-      {toggleForm ? (
-        <Login toggle={() => formMode()} />
-      ) : (
-        <SignUp toggle={() => formMode()} />
-      )}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            toggleForm ? (
+              <Login toggle={() => formMode()} />
+            ) : (
+              <SignUp toggle={() => formMode()} />
+            )
+          }
+        />
+        <Route path="/manager" element={<ManagerLogin />} />
+        <Route path="/employee" element={<ManagerSignUp />} />
+      </Routes>
     </div>
   );
 }
