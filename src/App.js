@@ -2,8 +2,8 @@ import Login from "./components/Login";
 import "./App.css";
 import SignUp from "./components/SignUp";
 import { useState } from "react";
-import ManagerLogin from "./manager/ManagerLogin";
-import ManagerSignUp from "./manager/ManagerSignUp";
+import Manager from "./manager/Manager";
+import Employee from "./manager/Employee";
 import { Route, Routes } from "react-router-dom";
 
 function App() {
@@ -24,8 +24,8 @@ function App() {
             )
           }
         />
-        <Route path="/manager" element={<ManagerLogin />} />
-        <Route path="/employee" element={<ManagerSignUp />} />
+        <Route path="/manager" element={<Manager />} />
+        <Route path="/employee" element={<Employee />} />
       </Routes>
     </div>
   );

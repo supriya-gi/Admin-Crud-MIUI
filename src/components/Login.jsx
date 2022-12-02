@@ -46,11 +46,12 @@ function Login(props) {
       const res = await signInWithEmailAndPassword(auth, email, password);
       const uid = res.user.uid;
       console.log(uid);
-      const q = query(collection(db, "Employee"), where("email", "==", email));
+      const q = query(collection(db, "Employee"), where("uid", "==", uid));
       const docs = await getDocs(q);
       // console.log(docs.docs[0].data());
       const type = docs.docs[0].data().type;
-      console.log(type);
+      console.log("type", type);
+
       if (type) {
         // setType(type);
         type === "manager" ? Navigate(`/manager`) : Navigate(`/employee`);

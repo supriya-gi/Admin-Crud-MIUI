@@ -48,6 +48,7 @@ function SignUp(props) {
     gender: "",
     hobbies: "",
     type: "",
+    // dept: "",
   });
   // const [selectedCheckbox, setSelectedCheckbox] = useState([]);
   // const handleCheckChange = (id) => {
@@ -76,6 +77,8 @@ function SignUp(props) {
     const { gender } = formData;
     const { hobbies } = formData;
     const { type } = formData;
+    const uid = user.user.uid;
+    console.log(user);
 
     await setDoc(doc(db, `Employee`, `${user?.user.uid}`), {
       email,
@@ -85,6 +88,8 @@ function SignUp(props) {
       gender,
       hobbies,
       type,
+      uid,
+      dept: "",
       //   createdAt: new Date(),
     });
   };
