@@ -6,6 +6,8 @@ import TableContainer from "@mui/material/TableContainer";
 import { styled } from "@mui/material/styles";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@mui/material";
 import { TableRows } from "@mui/icons-material";
 // import { setRows } from "@mui/material";
 import Paper from "@mui/material/Paper";
@@ -36,8 +38,12 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 function Employee() {
+  const Navigate = useNavigate();
   const [rows, setRows] = useState([]);
-
+  const logOut = (e) => {
+    e.preventDefault();
+    Navigate("/");
+  };
   const handleData = async () => {
     try {
       const blog = query(
@@ -64,6 +70,11 @@ function Employee() {
 
   return (
     <div>
+      <br />
+      <Button type="submit" variant="contained" onClick={logOut}>
+        Logout
+      </Button>
+      <br />
       <Container component="main" maxWidth="md">
         <TableContainer component={Paper}>
           <Table sx={{ Width: "400px" }} aria-label="simple table">
@@ -74,6 +85,8 @@ function Employee() {
                 <TableCell style={{ color: "white " }}>Gmail</TableCell>
                 <TableCell style={{ color: "white " }}>Gender</TableCell>
                 <TableCell style={{ color: "white " }}>Hobbies</TableCell>
+                <TableCell style={{ color: "white " }}>City</TableCell>
+                <TableCell style={{ color: "white " }}>Salary</TableCell>
                 <TableCell style={{ color: "white " }}>Department</TableCell>
               </TableRow>
             </TableHead>
@@ -85,6 +98,8 @@ function Employee() {
                   <StyledTableCell>{row.email}</StyledTableCell>
                   <StyledTableCell>{row.gender}</StyledTableCell>
                   <StyledTableCell>{row.hobbies}</StyledTableCell>
+                  <StyledTableCell>{row.city}</StyledTableCell>
+                  <StyledTableCell>{row.salary}</StyledTableCell>
                   <StyledTableCell>{row.dept}</StyledTableCell>
                 </StyledTableRow>
               ))}

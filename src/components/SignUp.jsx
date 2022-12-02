@@ -45,6 +45,8 @@ function SignUp(props) {
     password: "",
     fname: "",
     lname: "",
+    city: "",
+    salary: "",
     gender: "",
     hobbies: "",
     type: "",
@@ -74,6 +76,8 @@ function SignUp(props) {
     const { password } = formData;
     const { fname } = formData;
     const { lname } = formData;
+    const { city } = formData;
+    const { salary } = formData;
     const { gender } = formData;
     const { hobbies } = formData;
     const { type } = formData;
@@ -85,6 +89,8 @@ function SignUp(props) {
       password,
       fname,
       lname,
+      city,
+      salary,
       gender,
       hobbies,
       type,
@@ -194,6 +200,31 @@ function SignUp(props) {
                   onChange={(e) => {
                     handleChange(e);
                   }}
+                />
+                <br />
+                <br />
+                <TextField
+                  style={{ marginRight: "20px" }}
+                  id="outlined-basic"
+                  name="city"
+                  value={formData.city}
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
+                  label="City"
+                  variant="outlined"
+                />
+                <TextField
+                  style={{ marginRight: "20px" }}
+                  id="outlined-basic"
+                  name="salary"
+                  type="number"
+                  value={formData.salary}
+                  onChange={(e) => {
+                    handleChange(e);
+                  }}
+                  label="Salary"
+                  variant="outlined"
                 />
                 <br /> <br />
                 <FormControl>

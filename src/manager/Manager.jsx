@@ -6,6 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import { styled } from "@mui/material/styles";
 import MenuItem from "@mui/material/MenuItem";
 import TableHead from "@mui/material/TableHead";
+import { useNavigate } from "react-router-dom";
 import TableRow from "@mui/material/TableRow";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
@@ -21,8 +22,12 @@ import {
   getDocs,
   where,
   doc,
+  startAt,
   updateDoc,
+  orderBy,
 } from "firebase/firestore";
+import DropDown from "../components/DropDown";
+import { Navigate } from "react-router-dom";
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
@@ -44,6 +49,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function Manager(props) {
+  const Navigate = useNavigate();
   const [toggleForm, setToggleForm] = useState(true);
   const formMode = () => {
     setToggleForm(!toggleForm);
@@ -64,38 +70,103 @@ function Manager(props) {
   // }, []);
 
   //id == uid
-  const handleChange = (e, uid) => {
-    console.log("e", e, uid);
-    updateDept(uid, e.target.value);
-    setDepts(e.target.value);
+  const logOut = (e) => {
+    e.preventDefault();
+    Navigate("/");
   };
-  //dept ===e.target.value
-  const updateDept = async (uid, depts) => {
-    const blogRef = doc(db, `Employee`, `${uid}`);
-    await updateDoc(blogRef, {
-      dept: depts,
-    })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
-  };
-
   const handleQuery = async (e) => {
     setQuerys(e.target.value);
-    try {
-      if (querys === "2") {
-        const queryRef = query(
-          collection(db, "Employee"),
-          where("type", "==", "employee"),
-          where("depts", "==", "It")
-        );
-        const snapshot = await getDocs(queryRef);
-        const checkQuery = snapshot.docs.data();
-        console.log(checkQuery);
-        setRows(checkQuery);
-        return checkQuery;
-      }
-    } catch (err) {
-      console.log(err);
+    let aa = e.target.value;
+    if (aa == "1") {
+      console.log("1");
+      const queryRef = query(
+        collection(db, "Employee"),
+        where("type", "==", "employee"),
+        where("dept", "==", "HR"),
+        orderBy("salary", "desc")
+      );
+      const snapshot = await getDocs(queryRef);
+      console.log(snapshot);
+      const checkQuery = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(checkQuery);
+      setRows(checkQuery);
+      // setaa(checkQuery);
+      return checkQuery;
+    } else if (aa == "2") {
+      console.log("2");
+      const queryRef = query(
+        collection(db, "Employee"),
+        where("type", "==", "employee"),
+        where("dept", "==", "It")
+      );
+      const snapshot = await getDocs(queryRef);
+      console.log(snapshot);
+      const checkQuery = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(checkQuery);
+      setRows(checkQuery);
+      // setaa(checkQuery);
+      return checkQuery;
+    } else if (aa == "3") {
+      console.log("3");
+      const queryRef = query(
+        collection(db, "Employee"),
+        where("type", "==", "employee"),
+        where("dept", "==", "It"),
+        where("city", "==", "surat")
+      );
+      const snapshot = await getDocs(queryRef);
+      console.log(snapshot);
+      const checkQuery = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(checkQuery);
+      setRows(checkQuery);
+      // setaa(checkQuery);
+      return checkQuery;
+    } else if (aa == "4") {
+      console.log("4");
+      const queryRef = query(
+        collection(db, "Employee"),
+        where("type", "==", "employee"),
+
+        orderBy("dept", "==", "city"),
+        startAt("A" || "a")
+      );
+      const snapshot = await getDocs(queryRef);
+      console.log(snapshot);
+      const checkQuery = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(checkQuery);
+      setRows(checkQuery);
+      // setQuerys(checkQuery);
+      return checkQuery;
+    } else if (aa == "5") {
+      console.log("5");
+      const queryRef = query(
+        collection(db, "Employee"),
+        where("type", "==", "employee"),
+        where("dept", "==", "Sales")
+        // orderBy("fname", "==", "desc")
+      );
+      const snapshot = await getDocs(queryRef);
+      console.log(snapshot);
+      const checkQuery = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log(checkQuery);
+      setRows(checkQuery);
+      // setQuerys(checkQuery);
+      return checkQuery;
     }
   };
 
@@ -130,19 +201,34 @@ function Manager(props) {
             onChange={(e) => handleQuery(e)}
             value={querys}
           >
-            <FormControlLabel value="1" control={<Radio />} label="All Data" />
+            <FormControlLabel
+              value="1"
+              control={<Radio />}
+              label="HR departments with Max salary"
+            />
             <FormControlLabel
               value="2"
               control={<Radio />}
-              label=" Employee IT departments and location is Surat city"
+              label="IT departments with Min salary"
             />
             <FormControlLabel
               value="3"
               control={<Radio />}
-              label="Employee in Sales department"
+              label=" IT departments and location is Surat city"
+            />
+            <FormControlLabel
+              value="4"
+              control={<Radio />}
+              label=" IT departments and location name is starting from A"
+            />
+            <FormControlLabel
+              value="5"
+              control={<Radio />}
+              label=" Sales departments and descending order of employee name"
             />
           </RadioGroup>
         </div>
+
         <br />
         <TableContainer component={Paper}>
           <Table sx={{ Width: "400px" }} aria-label="simple table">
@@ -153,6 +239,8 @@ function Manager(props) {
                 <TableCell style={{ color: "white " }}>Gmail</TableCell>
                 <TableCell style={{ color: "white " }}>Gender</TableCell>
                 <TableCell style={{ color: "white " }}>Hobbies</TableCell>
+                <TableCell style={{ color: "white " }}>City</TableCell>
+                <TableCell style={{ color: "white " }}>Salary</TableCell>
                 <TableCell style={{ color: "white " }}>Department</TableCell>
               </TableRow>
             </TableHead>
@@ -164,33 +252,20 @@ function Manager(props) {
                   <StyledTableCell>{row.email}</StyledTableCell>
                   <StyledTableCell>{row.gender}</StyledTableCell>
                   <StyledTableCell>{row.hobbies}</StyledTableCell>
-
-                  <StyledTableCell>
-                    <FormControl
-                      variant="standard"
-                      sx={{ m: 1, minWidth: 120 }}
-                    >
-                      <Select
-                        labelId="demo-simple-select-standard-label"
-                        id="demo-simple-select-standard"
-                        value={depts}
-                        onChange={(e) => {
-                          handleChange(e, row.id);
-                        }}
-                        // label="Age"
-                      >
-                        <MenuItem value="HR">HR</MenuItem>
-                        <MenuItem value="Sales">Sales</MenuItem>
-                        <MenuItem value="It">IT</MenuItem>
-                      </Select>
-                    </FormControl>
-                  </StyledTableCell>
+                  <StyledTableCell>{row.city}</StyledTableCell>
+                  <StyledTableCell>{row.salary}</StyledTableCell>
+                  <DropDown data={row} />
                 </StyledTableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Container>
+      <br />
+      <Button type="submit" variant="contained" onClick={logOut}>
+        Logout
+      </Button>
+      <br />
     </div>
   );
 }
