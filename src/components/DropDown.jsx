@@ -24,7 +24,7 @@ function DropDown({ data }) {
   useEffect(() => {
     // console.log(data);
     setDepts(data.dept);
-  }, []);
+  }, [data.dept]);
   return (
     <div>
       <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>

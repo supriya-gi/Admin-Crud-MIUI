@@ -108,10 +108,11 @@ function Manager(props) {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log(checkQuery);
+      console.log("checkQuery", checkQuery);
+      console.log("snapshot", snapshot);
       setRows(checkQuery);
       // setaa(checkQuery);
-      return checkQuery;
+      // return checkQuery;
     } else if (aa == "3") {
       console.log("3");
       const queryRef = query(
@@ -126,18 +127,18 @@ function Manager(props) {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log(checkQuery);
+      console.log("check", checkQuery);
       setRows(checkQuery);
       // setaa(checkQuery);
-      return checkQuery;
+      // return checkQuery;
     } else if (aa == "4") {
       console.log("4");
       const queryRef = query(
         collection(db, "Employee"),
         where("type", "==", "employee"),
-
-        orderBy("dept", "==", "city"),
-        startAt("A" || "a")
+        // where("dept", "==", "It"),
+        orderBy("city", "", "A")
+        // startAt("A" || "a")
       );
       const snapshot = await getDocs(queryRef);
       console.log(snapshot);
@@ -145,10 +146,10 @@ function Manager(props) {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log(checkQuery);
+      console.log(snapshot.docs);
       setRows(checkQuery);
       // setQuerys(checkQuery);
-      return checkQuery;
+      // return snapshot.docs;
     } else if (aa == "5") {
       console.log("5");
       const queryRef = query(
@@ -166,7 +167,7 @@ function Manager(props) {
       console.log(checkQuery);
       setRows(checkQuery);
       // setQuerys(checkQuery);
-      return checkQuery;
+      return snapshot.docs;
     }
   };
 
