@@ -25,7 +25,7 @@ function App() {
           }
         />
         <Route path="/manager" element={<Manager />} />
-        <Route path="/employee" element={<Employee />} />
+        <Route path="/employee/:uid" element={<Employee />} />
       </Routes>
     </div>
   );

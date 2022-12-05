@@ -6,7 +6,7 @@ import TableContainer from "@mui/material/TableContainer";
 import { styled } from "@mui/material/styles";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Button } from "@mui/material";
 import { TableRows } from "@mui/icons-material";
 // import { setRows } from "@mui/material";
@@ -38,6 +38,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 function Employee() {
+  const { uid } = useParams();
   const Navigate = useNavigate();
   const [rows, setRows] = useState([]);
   const logOut = (e) => {
@@ -48,15 +49,16 @@ function Employee() {
     try {
       const blog = query(
         collection(db, "Employee"),
-        // where("uid", "==", uid),
+        where("uid", "==", uid),
         where("type", "==", "employee")
+        // where("doc.id", "==", "doc.id")
       );
       const snapshot = await getDocs(blog);
       const rows = snapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
-      console.log(rows.uid);
+      // console.log("uid", rows[0].id)
       setRows(rows);
 
       return rows;
@@ -66,7 +68,7 @@ function Employee() {
   };
   useEffect(() => {
     handleData();
-  }, []);
+  }, [uid]);
 
   return (
     <div>

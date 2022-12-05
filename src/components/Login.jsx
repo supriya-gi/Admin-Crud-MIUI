@@ -54,7 +54,9 @@ function Login(props) {
 
       if (type) {
         // setType(type);
-        type === "manager" ? Navigate(`/manager`) : Navigate(`/employee`);
+        type === "manager"
+          ? Navigate(`/manager`)
+          : Navigate(`/employee/${uid}`);
       } else {
         return "No user Found";
       }
